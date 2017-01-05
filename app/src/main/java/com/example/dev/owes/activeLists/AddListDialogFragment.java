@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.support.v7.app.AlertDialog;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +19,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.dev.owes.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * Adds a new shopping list
@@ -87,7 +90,9 @@ public class AddListDialogFragment extends DialogFragment {
      */
 
     public void addShoppingList(){
-
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        String userEnteredName = mEditTextListName.getText().toString();
+        rootRef.child("listName").setValue(userEnteredName);
     }
 }
 

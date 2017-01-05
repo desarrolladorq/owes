@@ -6,7 +6,7 @@ import com.example.dev.owes.BuildConfig;
  * Created by dev on 03/01/17.
  */
 
-public final class constants {
+public final class Constants {
     /**
      * Constants for Firebase URL
      */
