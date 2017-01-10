@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.dev.owes.R;
+import com.example.dev.owes.models.ShoppingList;
 import com.example.dev.owes.utils.Constants;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,7 +28,7 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class ShoppingListsFragment extends Fragment {
     private ListView mListView;
-    private TextView mTextViewListName;
+    private TextView mTextViewListName, mTextViewOwner;
 
     public ShoppingListsFragment() {
         /* Required empty public constructor */
@@ -79,14 +80,15 @@ public class ShoppingListsFragment extends Fragment {
             }
         });
 
-        DatabaseReference listNameRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference listNameRef = FirebaseDatabase.getInstance().getReference("activeList");
 
       listNameRef.addValueEventListener(new ValueEventListener() {
           @Override
           public void onDataChange(DataSnapshot dataSnapshot) {
               //Log.e("ShoppingListFragment","The data changed");
-              String listName = (String) dataSnapshot.getValue();
-              mTextViewListName.setText(listName);
+              ShoppingList shoppingList =  dataSnapshot.getValue(ShoppingList.class);
+              mTextViewListName.setText(shoppingList.getListName());
+              mTextViewOwner.setText(shoppingList.getOwner());
 
           }
 
@@ -111,5 +113,6 @@ public class ShoppingListsFragment extends Fragment {
     private void initializeScreen(View rootView) {
         mListView = (ListView) rootView.findViewById(R.id.list_view_active_lists);
         mTextViewListName = (TextView) rootView.findViewById(R.id.text_view_list_name);
+        mTextViewOwner = (TextView) rootView.findViewById(R.id.text_view_created_by_user);
     }
 }

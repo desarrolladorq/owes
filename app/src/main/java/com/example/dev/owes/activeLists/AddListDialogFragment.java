@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.dev.owes.R;
+import com.example.dev.owes.models.ShoppingList;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -90,9 +91,15 @@ public class AddListDialogFragment extends DialogFragment {
      */
 
     public void addShoppingList(){
+        // Get a reference to the firebase database
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        // Get the string the user entered in variable
         String userEnteredName = mEditTextListName.getText().toString();
-        rootRef.child("listName").setValue(userEnteredName);
+        // Create an instance of Shopping List with the listName the user entered and an anonymous
+        // owner
+        ShoppingList shoppingList = new ShoppingList(userEnteredName, "nonymous owner");
+        // set the child value in firebase, (we make an arbitrary node in order to update its child)
+        rootRef.child("activeList").setValue(shoppingList);
     }
 }
 
