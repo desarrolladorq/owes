@@ -3,7 +3,6 @@ package com.example.dev.owes.activeLists;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +12,15 @@ import android.widget.TextView;
 
 import com.example.dev.owes.R;
 import com.example.dev.owes.models.ShoppingList;
-import com.example.dev.owes.utils.Constants;
+import com.example.dev.owes.utils.Utils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Date;
 
 
 /**
@@ -28,7 +30,7 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class ShoppingListsFragment extends Fragment {
     private ListView mListView;
-    private TextView mTextViewListName, mTextViewOwner;
+    private TextView mTextViewListName, mTextViewListOwner, mTextViewEditTime;
 
     public ShoppingListsFragment() {
         /* Required empty public constructor */
@@ -85,11 +87,25 @@ public class ShoppingListsFragment extends Fragment {
       listNameRef.addValueEventListener(new ValueEventListener() {
           @Override
           public void onDataChange(DataSnapshot dataSnapshot) {
-              //Log.e("ShoppingListFragment","The data changed");
+              // You can use getValue to deserialize the data at dataSnapshot
+              // into a ShoppingList.
               ShoppingList shoppingList =  dataSnapshot.getValue(ShoppingList.class);
-              mTextViewListName.setText(shoppingList.getListName());
-              mTextViewOwner.setText(shoppingList.getOwner());
+              // If there was no data at the location we added the listener, then
+              // shoppingList will be null.
+              if(shoppingList != null){
+                  // If there was data, take the TextViews and set the appropiate values.
+                  mTextViewListName.setText(shoppingList.getListName());
+                  mTextViewListOwner.setText(shoppingList.getOwner());
+                  if(shoppingList.getTimeLastChanged() != null){
+                      mTextViewEditTime.setText(
+                              Utils.SIMPLE_DATE_FORMAT.
+                                      format(new Date(shoppingList.getTimeLastChangedLong()))
+                      );
 
+                  }else{
+                      mTextViewEditTime.setText("");
+                  }
+              }
           }
 
           @Override
@@ -113,6 +129,7 @@ public class ShoppingListsFragment extends Fragment {
     private void initializeScreen(View rootView) {
         mListView = (ListView) rootView.findViewById(R.id.list_view_active_lists);
         mTextViewListName = (TextView) rootView.findViewById(R.id.text_view_list_name);
-        mTextViewOwner = (TextView) rootView.findViewById(R.id.text_view_created_by_user);
+        mTextViewListOwner = (TextView) rootView.findViewById(R.id.text_view_created_by_user);
+        mTextViewEditTime = (TextView) rootView.findViewById(R.id.text_view_edit_time);
     }
 }

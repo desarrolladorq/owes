@@ -97,7 +97,7 @@ public class AddListDialogFragment extends DialogFragment {
         String userEnteredName = mEditTextListName.getText().toString();
         // Create an instance of Shopping List with the listName the user entered and an anonymous
         // owner
-        ShoppingList shoppingList = new ShoppingList(userEnteredName, "nonymous owner");
+        ShoppingList shoppingList = new ShoppingList(userEnteredName, "anonymous owner");
         // set the child value in firebase, (we make an arbitrary node in order to update its child)
         rootRef.child("activeList").setValue(shoppingList);
     }
